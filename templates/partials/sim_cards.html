@@ -1,0 +1,53 @@
+<div id="sim-cards">
+  {% for sim in sims %}
+    <div class="sim-card" id="sim-{{ sim.id }}">
+      <div class="card-body">
+        <i class="bi bi-sim"
+           style="color:
+             {% if sim.status == 'ONLINE' %}
+               #28a745
+             {% else %}
+               #6c757d
+             {% endif %};">
+        </i>
+        <h6 class="mt-2">Port {{ sim.port_number }}</h6>
+
+        <span class="status-badge badge
+             {% if sim.status == 'ONLINE' %}bg-success{% else %}bg-secondary{% endif %}">
+          {{ sim.status }}
+        </span>
+
+        <p class="mb-1">{{ sim.sim_number }}</p>
+        <p class="text-muted mb-1">{{ sim.operator_name }}</p>
+
+        {% if sim.status == 'ONLINE' %}
+          <p class="signal-text
+               {% if sim.signal_quality >= 20 %}
+                 text-success
+               {% elif sim.signal_quality >= 10 %}
+                 text-warning
+               {% else %}
+                 text-danger
+               {% endif %}">
+            Signal: {{ sim.signal_quality }}/31
+          </p>
+
+          <div class="signal-bars">
+            {% for i in range(1, 6) %}
+              <div class="signal-bar
+                   {% if sim.signal_quality * 5 >= i * 31 %}active{% endif %}"
+                   style="height: {{ i * 20 }}%;"></div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="card-footer">
+        <small class="text-muted">
+          MAJ: {{ sim.last_update.strftime('%d/%m/%Y %H:%M') }}
+        </small>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+

@@ -1,0 +1,78 @@
+body {
+  background-color: #f8f9fa;
+}
+
+nav {
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #0d6efd;
+  color: #fff !important;
+}
+
+main {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  margin: 2rem;
+}
+
+/* === SIM cards container & cards === */
+#sim-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-evenly;
+}
+
+.sim-card {
+  flex: 1 1 200px;
+  max-width: 240px;
+  min-width: 180px;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.sim-card:hover {
+  transform: translateY(-4px);
+}
+
+/* === Signal bars === */
+.signal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 1.5rem;        /* container height */
+  margin-top: 0.5rem;
+}
+
+.signal-bar {
+  width: 4px;
+  background-color: #ccc;
+  border-radius: 2px;
+  transition: height 0.3s ease-in-out, background-color 0.3s;
+}
+.signal-bar.active {
+  background-color: #28a745;
+}
+
+/* Sidebar stickiness (unchanged) */
+.sticky-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+

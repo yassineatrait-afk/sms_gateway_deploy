@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}SIM Status{% endblock %}
+
+{% block content %}
+<h2><i class="bi bi-sim"></i> Ports SIM</h2>
+
+<div id="sim-cards-container">
+  {% include 'partials/sim_cards.html' %}
+</div>
+
+<!-- jQuery + debug + auto-refresh -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  setInterval(() => {
+    console.log("🔄 Mise à jour des cartes SIM...");
+    $("#sim-cards-container").load("/sim/status/cards #sim-cards", function(response, status, xhr) {
+      if (status === "error") {
+        console.error("Erreur de chargement AJAX :", xhr.status, xhr.statusText);
+      } else {
+        console.log("✅ Cartes SIM actualisées !");
+      }
+    });
+  }, 3000); // 3 secondes
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Tâches Planifiées{% endblock %}
+{% block content %}
+<h2>🕒 Campagnes programmées</h2>
+{% if tasks %}
+<table class="table table-hover mt-3">
+  <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Type</th>
+      <th>ID cible</th>
+      <th>Date planifiée</th>
+      <th>Statut</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in tasks %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ t.task_type }}</td>
+      <td>{{ t.target_id }}</td>
+      <td>{{ t.scheduled_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>
+        <span class="badge bg-{{ 'warning' if t.status == 'QUEUED' else 'success' if t.status == 'SENT' else 'danger' }}">
+          {{ t.status }}
+        </span>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="alert alert-secondary mt-3">Aucune tâche planifiée.</div>
+{% endif %}
+{% endblock %}

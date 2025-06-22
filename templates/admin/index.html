@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Admin – Gestion des utilisateurs{% endblock %}
+{% block content %}
+  <h2>Gestion des utilisateurs</h2>
+  <a href="{{ url_for('admin.create_user') }}" class="btn btn-primary mb-3">Créer un utilisateur</a>
+  <table class="table">
+    <thead><tr><th>#</th><th>Nom</th><th>Rôle</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.role.name }}</td>
+        <td>
+          <!-- links to edit/delete -->
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+

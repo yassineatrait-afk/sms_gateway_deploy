@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Paramètres{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4"><i class="bi bi-gear-fill"></i> Paramètres</h2>
+
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#network">Réseau</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#simports">SIM/Ports</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#security">Sécurité</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- NETWORK TAB -->
+    <div class="tab-pane fade show active" id="network">
+      <form method="POST">
+        <div class="mb-3">
+          <label for="default_ip" class="form-label">Adresse IP par défaut</label>
+          <input type="text" class="form-control" id="default_ip" name="default_ip"
+                 value="{{ default_ip }}">
+        </div>
+        <div class="mb-3">
+          <label for="subnet_mask" class="form-label">Masque de sous-réseau</label>
+          <input type="text" class="form-control" id="subnet_mask" name="subnet_mask"
+                 value="{{ subnet_mask }}">
+        </div>
+        <div class="mb-3">
+          <label for="gateway" class="form-label">Passerelle</label>
+          <input type="text" class="form-control" id="gateway" name="gateway"
+                 value="{{ gateway }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </form>
+    </div>
+
+    <!-- SIM/PORTS TAB -->
+    <div class="tab-pane fade" id="simports">
+      <h5 class="mb-3">Planification des ports SIM</h5>
+      <p class="text-muted">Automatisez l’activation des SIM à des créneaux horaires.</p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Port</th>
+            <th>Activer</th>
+            <th>Début</th>
+            <th>Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for port in range(1,9) %}
+          <tr>
+            <td>Port {{ port }}</td>
+            <td><input type="checkbox" name="enable_{{port}}"></td>
+            <td><input type="time" class="form-control" name="start_{{port}}"></td>
+            <td><input type="time" class="form-control" name="end_{{port}}"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button class="btn btn-primary">Enregistrer SIM/Ports</button>
+    </div>
+
+    <!-- SECURITY TAB -->
+    <div class="tab-pane fade" id="security">
+      <h5 class="mb-3">Accès & Sécurité</h5>
+      <div class="mb-3">
+        <label class="form-label">Politique de mot de passe</label>
+        <select class="form-select" name="password_policy">
+          <option>Min. 8 caractères</option>
+          <option>Rotation tous les 30 jours</option>
+          <option>2FA obligatoire</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Liste blanche IP</label>
+        <textarea class="form-control" name="ip_whitelist" rows="4"
+          placeholder="1.2.3.4\n5.6.7.8"></textarea>
+      </div>
+      <button class="btn btn-primary">Enregistrer Sécurité</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

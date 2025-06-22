@@ -1,0 +1,11 @@
+from flask import Blueprint, render_template
+from routes.auth_decorator import login_required
+from database.models import SimPort
+
+sim_bp = Blueprint('sim', __name__, url_prefix='/sim')
+
+@sim_bp.route('/status')
+@login_required
+def sim_status():
+    ports = SimPort.query.order_by(SimPort.port_number).all()
+    return render_template('sim_status.html', ports=ports)

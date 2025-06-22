@@ -1,0 +1,136 @@
+/* Reset & base */
+* {
+*   margin: 0;
+*     padding: 0;
+*       box-sizing: border-box;
+*       }
+*       body {
+*         background-color: #f8f9fa;
+*         }
+*
+*/* Main content styling; no global top margin */
+main {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Mobile: push content below topbar (navbar height = 56px) */
+@media (max-width: 991px) {
+  main {
+    margin: 56px 1rem 1rem;
+  }
+}
+
+/* Desktop sidebar layout */
+@media (min-width: 992px) {
+  /* Hide mobile nav components */
+  .navbar.d-lg-none,
+  .offcanvas {
+    display: none !important;
+  }
+  /* Show sidebar & adjust content */
+  aside {
+    display: flex !important;
+  }
+  main {
+    margin: 0rem 1rem 1rem 260px;
+  }
+}
+
+/* NAV LINK styling */
+.nav-link {
+  padding: .75rem;
+  border-radius: .25rem;
+  transition: background .2s;
+}
+.nav-link:hover,
+.nav-link.active {
+  background: #0d6efd;
+  color: #fff !important;
+}
+
+/* === GRID OF SIM CARDS === */
+#sim-cards {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+@media (min-width: 1600px) {
+  #sim-cards { grid-template-columns: repeat(5, 1fr); }
+}
+@media (min-width: 1200px) and (max-width: 1599px) {
+  #sim-cards { grid-template-columns: repeat(5, 1fr); }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  #sim-cards { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  #sim-cards { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  #sim-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575px) {
+  #sim-cards { grid-template-columns: 1fr; }
+}
+
+/* == SIM CARD == */
+.sim-card {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #28a745;
+  border-radius: .5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform .2s, box-shadow .2s;
+}
+.sim-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.sim-card .card-body {
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+.sim-card .bi-sim {
+  font-size: 3.5rem;
+  margin-bottom: .5rem;
+}
+.sim-card .card-footer {
+  padding: .75rem 1rem;
+  background: transparent;
+}
+
+/* == SIGNAL BARS == */
+.signal-bars {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 4px;
+  height: 1.5rem;
+  margin-top: .5rem;
+}
+.signal-bar {
+  width: 6px;
+  background: #ccc;
+  border-radius: 2px;
+  transition: background .3s, height .3s;
+  flex: none;
+}
+.signal-bar.active {
+  background: #28a745;
+}
+
+/* TEXT UTILITIES */
+.text-success { color: #28a745 !important; }
+.text-warning { color: #ffc107 !important; }
+.text-danger  { color: #dc3545 !important; }
+

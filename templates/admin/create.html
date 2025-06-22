@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Créer un utilisateur{% endblock %}
+{% block content %}
+  <h2>Créer un nouvel utilisateur</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Nom d’utilisateur</label>
+      <input name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Mot de passe</label>
+      <input name="password" type="password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Rôle</label>
+      <select name="role_id" class="form-select">
+        {% for r in roles %}
+        <option value="{{ r.id }}">{{ r.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-success">Créer</button>
+  </form>
+{% endblock %}
+
