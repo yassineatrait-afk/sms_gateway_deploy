@@ -9,13 +9,15 @@
   <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
+  {% set role = g.current_user.role.name if g.current_user else '' %}
+
   <!-- Mobile Topbar -->
   <nav class="navbar navbar-dark bg-dark d-lg-none fixed-top">
     <div class="container-fluid">
       <button class="btn btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileNav">
         <i class="bi bi-list"></i>
       </button>
-      <a class="navbar-brand ms-2" href="/">SMS Gateway</a>
+      <a class="navbar-brand ms-2" href="{{ url_for('home') }}">SMS Gateway</a>
     </div>
   </nav>
 
@@ -27,14 +29,71 @@
     </div>
     <div class="offcanvas-body">
       <ul class="nav flex-column">
-        <li class="nav-item"><a href="/" class="nav-link text-white"><i class="bi bi-house-door"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="/sms/send_single" class="nav-link text-white"><i class="bi bi-send"></i> Envoi SMS</a></li>
-        <li class="nav-item"><a href="/sms/send_campaign" class="nav-link text-white"><i class="bi bi-megaphone"></i> Campagne</a></li>
-        <li class="nav-item"><a href="/at/command" class="nav-link text-white"><i class="bi bi-terminal"></i> Commande AT</a></li>
-        <li class="nav-item"><a href="/inbox/" class="nav-link text-white"><i class="bi bi-inbox"></i> Inbox</a></li>
-        <li class="nav-item"><a href="/sim/status" class="nav-link text-white"><i class="bi bi-sim"></i> SIM Status</a></li>
-        <li class="nav-item"><a href="/tasks/scheduled" class="nav-link text-white"><i class="bi bi-clock-history"></i> Tâches</a></li>
-        <li class="nav-item mt-4"><a href="{{ url_for('auth.logout') }}" class="nav-link text-danger"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+
+        <!-- Everyone -->
+        <li class="nav-item">
+          <a href="{{ url_for('home') }}" class="nav-link text-white">
+            <i class="bi bi-house-door"></i> Dashboard
+          </a>
+        </li>
+
+        <!-- Managers & Admins -->
+        {% if role in ['admin','manager'] %}
+        <li class="nav-item">
+          <a href="{{ url_for('sms.send_single') }}" class="nav-link text-white">
+            <i class="bi bi-send"></i> Envoi SMS
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('sms_campaign.send_campaign') }}" class="nav-link text-white">
+            <i class="bi bi-megaphone"></i> Campagne
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('tasks.scheduled_tasks') }}" class="nav-link text-white">
+            <i class="bi bi-clock-history"></i> Tâches
+          </a>
+        </li>
+        {% endif %}
+
+        <!-- Admin only -->
+        {% if role == 'admin' %}
+        <li class="nav-item">
+          <a href="{{ url_for('at_bp.at_command') }}" class="nav-link text-white">
+            <i class="bi bi-terminal"></i> Commande AT
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('admin.list_users') }}" class="nav-link text-white">
+            <i class="bi bi-people"></i> Utilisateurs
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('admin.list_roles') }}" class="nav-link text-white">
+            <i class="bi bi-shield-lock"></i> Rôles
+          </a>
+        </li>
+        {% endif %}
+
+        <!-- Everyone -->
+        <li class="nav-item">
+          <a href="{{ url_for('inbox.inbox') }}" class="nav-link text-white">
+            <i class="bi bi-inbox"></i> Inbox
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('sim.sim_status') }}" class="nav-link text-white">
+            <i class="bi bi-sim"></i> SIM Status
+          </a>
+        </li>
+
+        <!-- Logout -->
+        <li class="nav-item mt-4">
+          <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
+            <i class="bi bi-box-arrow-right"></i> Déconnexion
+          </a>
+        </li>
+
       </ul>
     </div>
   </div>
@@ -43,14 +102,71 @@
   <aside class="d-none d-lg-flex flex-column bg-dark text-white p-3 position-fixed vh-100" style="width:240px;">
     <h4 class="text-center">SMS Gateway</h4>
     <ul class="nav flex-column mt-4">
-      <li class="nav-item"><a href="/" class="nav-link text-white"><i class="bi bi-house-door"></i> Dashboard</a></li>
-      <li class="nav-item"><a href="/sms/send_single" class="nav-link text-white"><i class="bi bi-send"></i> Envoi SMS</a></li>
-      <li class="nav-item"><a href="/sms/send_campaign" class="nav-link text-white"><i class="bi bi-megaphone"></i> Campagne</a></li>
-      <li class="nav-item"><a href="/at/command" class="nav-link text-white"><i class="bi bi-terminal"></i> Commande AT</a></li>
-      <li class="nav-item"><a href="/inbox/" class="nav-link text-white"><i class="bi bi-inbox"></i> Inbox</a></li>
-      <li class="nav-item"><a href="/sim/status" class="nav-link text-white"><i class="bi bi-sim"></i> SIM Status</a></li>
-      <li class="nav-item"><a href="/tasks/scheduled" class="nav-link text-white"><i class="bi bi-clock-history"></i> Tâches</a></li>
-      <li class="nav-item mt-auto"><a href="{{ url_for('auth.logout') }}" class="nav-link text-danger"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
+
+      <!-- Everyone -->
+      <li class="nav-item">
+        <a href="{{ url_for('home') }}" class="nav-link text-white">
+          <i class="bi bi-house-door"></i> Dashboard
+        </a>
+      </li>
+
+      <!-- Managers & Admins -->
+      {% if role in ['admin','manager'] %}
+      <li class="nav-item">
+        <a href="{{ url_for('sms.send_single') }}" class="nav-link text-white">
+          <i class="bi bi-send"></i> Envoi SMS
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('sms_campaign.send_campaign') }}" class="nav-link text-white">
+          <i class="bi bi-megaphone"></i> Campagne
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('tasks.scheduled_tasks') }}" class="nav-link text-white">
+          <i class="bi bi-clock-history"></i> Tâches
+        </a>
+      </li>
+      {% endif %}
+
+      <!-- Admin only -->
+      {% if role == 'admin' %}
+      <li class="nav-item">
+        <a href="{{ url_for('at_bp.at_command') }}" class="nav-link text-white">
+          <i class="bi bi-terminal"></i> Commande AT
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('admin.list_users') }}" class="nav-link text-white">
+          <i class="bi bi-people"></i> Utilisateurs
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('admin.list_roles') }}" class="nav-link text-white">
+          <i class="bi bi-shield-lock"></i> Rôles
+        </a>
+      </li>
+      {% endif %}
+
+      <!-- Everyone -->
+      <li class="nav-item">
+        <a href="{{ url_for('inbox.inbox') }}" class="nav-link text-white">
+          <i class="bi bi-inbox"></i> Inbox
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ url_for('sim.sim_status') }}" class="nav-link text-white">
+          <i class="bi bi-sim"></i> SIM Status
+        </a>
+      </li>
+
+      <!-- Logout -->
+      <li class="nav-item mt-auto">
+        <a href="{{ url_for('auth.logout') }}" class="nav-link text-danger">
+          <i class="bi bi-box-arrow-right"></i> Déconnexion
+        </a>
+      </li>
+
     </ul>
   </aside>
 
@@ -63,3 +179,4 @@
   <script src="/static/sim_status.js"></script>
 </body>
 </html>
+

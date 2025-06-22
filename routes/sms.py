@@ -1,12 +1,12 @@
 from flask import Blueprint, request, render_template
-from routes.auth_decorator import login_required
+from routes.auth_decorator import manager_required
 from services.sms_parser import parse_csv_numbers
 from database.models import Message, db
 
 sms_bp = Blueprint('sms', __name__, url_prefix='/sms')
 
 @sms_bp.route('/send_single', methods=['GET', 'POST'])
-@login_required
+@manager_required
 def send_single():
     if request.method == 'POST':
         number = request.form.get('number')
@@ -21,7 +21,7 @@ def send_single():
     return render_template("sms_send_single.html")
 
 @sms_bp.route('/send_campaign', methods=['GET', 'POST'])
-@login_required
+@manager_required
 def send_campaign():
     if request.method == 'POST':
         file = request.files.get('file')

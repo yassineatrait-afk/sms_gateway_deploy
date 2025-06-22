@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Créer un rôle{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mt-4">Créer un rôle</h2>
+
+  {# Flash messages #}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ 'danger' if category=='danger' else 'success' if category=='success' else 'warning' }} mt-3">
+          {{ msg }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" class="mt-3">
+    <div class="mb-3">
+      <label for="name" class="form-label">Nom du rôle</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="form-control"
+        required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Créer</button>
+    <a href="{{ url_for('admin.list_roles') }}" class="btn btn-secondary">Annuler</a>
+  </form>
+</div>
+{% endblock %}
+

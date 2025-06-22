@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Créer un utilisateur{% endblock %}
+{% block title %}Modifier utilisateur{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-  <h2 class="mt-4">Créer un nouvel utilisateur</h2>
+  <h2 class="mt-4">Modifier utilisateur</h2>
 
   {# Flash messages #}
   {% with messages = get_flashed_messages(with_categories=true) %}
@@ -19,21 +19,40 @@
   <form method="POST" class="mt-3">
     <div class="mb-3">
       <label for="username" class="form-label">Nom d’utilisateur</label>
-      <input type="text" id="username" name="username" class="form-control" required>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        class="form-control"
+        value="{{ user.username }}"
+        required>
     </div>
+
     <div class="mb-3">
-      <label for="password" class="form-label">Mot de passe</label>
-      <input type="password" id="password" name="password" class="form-control" required>
+      <label for="password" class="form-label">
+        Nouveau mot de passe
+        <small class="text-muted">(laisser vide pour conserver l’actuel)</small>
+      </label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control"
+        placeholder="********">
     </div>
+
     <div class="mb-3">
       <label for="role_id" class="form-label">Rôle</label>
       <select id="role_id" name="role_id" class="form-select">
         {% for r in roles %}
-        <option value="{{ r.id }}">{{ r.name }}</option>
+        <option value="{{ r.id }}" {% if r.id == user.role_id %}selected{% endif %}>
+          {{ r.name }}
+        </option>
         {% endfor %}
       </select>
     </div>
-    <button type="submit" class="btn btn-success">Créer</button>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
     <a href="{{ url_for('admin.list_users') }}" class="btn btn-secondary">Annuler</a>
   </form>
 </div>

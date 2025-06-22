@@ -1,6 +1,6 @@
 # routes/settings.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from routes.auth_decorator import login_required
+from routes.auth_decorator import admin_required
 
 settings_bp = Blueprint('settings', __name__, url_prefix='/settings')
 
@@ -12,7 +12,7 @@ DEFAULTS = {
 }
 
 @settings_bp.route('/', methods=['GET', 'POST'])
-@login_required
+@admin_required
 def index():
     if request.method == 'POST':
         # TODO: persist the posted values into your Settings table
@@ -20,3 +20,4 @@ def index():
         return redirect(url_for('settings.index'))
 
     return render_template('settings.html', **DEFAULTS)
+

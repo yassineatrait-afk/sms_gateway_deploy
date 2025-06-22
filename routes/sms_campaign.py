@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from routes.auth_decorator import manager_required
 import csv, os
 from werkzeug.utils import secure_filename
 
@@ -8,10 +9,12 @@ UPLOAD_FOLDER = '/tmp/sms_uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @sms_campaign_bp.route('/send_campaign', methods=['GET'])
+@manager_required
 def send_campaign():
     return render_template('sms_send_campaign.html')
 
 @sms_campaign_bp.route('/import_campaign', methods=['POST'])
+@manager_required
 def import_campaign():
     file = request.files.get('file')
     unit = request.form.get('unit')
@@ -40,6 +43,7 @@ def import_campaign():
     )
 
 @sms_campaign_bp.route('/validate_campaign', methods=['POST'])
+@manager_required
 def validate_campaign():
     message = request.form.get('message')
     lang = request.form.get('lang')

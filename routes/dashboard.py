@@ -1,14 +1,14 @@
 # routes/dashboard.py
 
 from flask import Blueprint, jsonify
-from routes.auth_decorator import login_required
+from routes.auth_decorator import viewer_required
 from datetime import datetime, date, timedelta
 from database.models import Message, SimPort, ScheduledTask, SignalLog
 
 dashboard_bp = Blueprint('dashboard_api', __name__)
 
 @dashboard_bp.route('/api/dashboard/summary')
-@login_required
+@viewer_required
 def summary():
     today_start   = datetime.combine(date.today(), datetime.min.time())
     sms_sent      = Message.query.filter(Message.send_time >= today_start).count()
@@ -23,7 +23,7 @@ def summary():
     })
 
 @dashboard_bp.route('/api/dashboard/charts')
-@login_required
+@viewer_required
 def charts():
     now = datetime.utcnow()
 

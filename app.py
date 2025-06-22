@@ -1,10 +1,13 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, session, g
 from config import Config
-from database.models import db
+from database.models import db, User
 
 # Auth
 from routes.auth import auth_bp
 from routes.auth_decorator import login_required
+
+# Admin (User & Role management)
+from routes.admin import admin_bp
 
 # Feature blueprints
 from routes.sms import sms_bp
@@ -24,15 +27,29 @@ app.config.from_object(Config)
 # Initialize DB
 db.init_app(app)
 
+# Load current user into `g.current_user`
+@app.before_request
+def load_current_user():
+    g.current_user = None
+    user_id = session.get('user_id')
+    if user_id:
+        g.current_user = User.query.get(user_id)
+
+# Make `current_user` available in all templates
+@app.context_processor
+def inject_current_user():
+    return dict(current_user=g.current_user)
+
 # Register blueprints
 app.register_blueprint(auth_bp)
+app.register_blueprint(admin_bp)               # ← Admin routes
 app.register_blueprint(sms_bp)
 app.register_blueprint(sms_campaign_bp)
 app.register_blueprint(at_bp)
 app.register_blueprint(sim_bp)
 app.register_blueprint(inbox_bp)
 app.register_blueprint(tasks_bp)
-app.register_blueprint(dashboard_bp)  # <— Dashboard APIs
+app.register_blueprint(dashboard_bp)            # ← Dashboard APIs
 
 # Homepage / dashboard view
 @app.route('/')
@@ -42,3 +59,4 @@ def home():
 
 if __name__ == '__main__':
     app.run(host='192.168.88.132', port=5000, debug=True)
+

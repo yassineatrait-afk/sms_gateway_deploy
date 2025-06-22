@@ -1,7 +1,7 @@
 # routes/at.py
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-from routes.auth_decorator import login_required
+from routes.auth_decorator import manager_required
 from database.models import db, ATCommand
 from datetime import datetime
 
@@ -9,7 +9,7 @@ at_bp = Blueprint('at_bp', __name__, url_prefix='/at')
 
 
 @at_bp.route('/command', methods=['GET', 'POST'])
-@login_required
+@manager_required
 def at_command():
     if request.method == 'POST':
         port     = request.form['port']
@@ -28,7 +28,7 @@ def at_command():
 
 
 @at_bp.route('/api/commands')
-@login_required
+@manager_required
 def at_commands_api():
     # return last 20 commands, newest first
     cmds = (ATCommand.query

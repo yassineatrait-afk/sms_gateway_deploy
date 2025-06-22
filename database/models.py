@@ -52,8 +52,8 @@ class SimPort(db.Model):
     operator_name = db.Column(db.String(100))
     last_update = db.Column(db.DateTime, default=datetime.utcnow)
 
-# New model for historical logging of average signal quality
 class SignalLog(db.Model):
+    """Historical logging of average signal quality."""
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     avg_quality = db.Column(db.Float, nullable=False)
@@ -77,3 +77,29 @@ class Log(db.Model):
     type = db.Column(db.Enum('INFO', 'WARNING', 'ERROR', 'COMMAND', 'SYSTEM'), nullable=False)
     message = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# New models for User & Role management:
+
+class Role(db.Model):
+    __tablename__ = 'role'
+    id    = db.Column(db.Integer, primary_key=True)
+    name  = db.Column(db.String(50), unique=True, nullable=False)
+    users = db.relationship('User', backref='role', lazy=True)
+
+class User(db.Model):
+    __tablename__ = 'user'
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    role_id       = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_admin(self):
+        return self.role and self.role.name.lower() == 'admin'
+

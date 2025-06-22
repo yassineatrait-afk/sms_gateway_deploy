@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Gestion des utilisateurs{% endblock %}
+{% block title %}Gestion des rôles{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-  <h2 class="mt-4">Gestion des utilisateurs</h2>
+  <h2 class="mt-4">Gestion des rôles</h2>
 
   {# Flash messages #}
   {% with messages = get_flashed_messages(with_categories=true) %}
@@ -17,31 +17,28 @@
   {% endwith %}
 
   <div class="my-3">
-    <a href="{{ url_for('admin.create_user') }}" class="btn btn-primary">Créer un utilisateur</a>
-    <a href="{{ url_for('admin.list_roles') }}"  class="btn btn-secondary">Gérer les rôles</a>
+    <a href="{{ url_for('admin.create_role') }}" class="btn btn-primary">Créer un rôle</a>
+    <a href="{{ url_for('admin.list_users') }}" class="btn btn-secondary">Retour aux utilisateurs</a>
   </div>
 
   <table class="table table-striped">
     <thead class="table-light">
       <tr>
         <th>#</th>
-        <th>Nom d’utilisateur</th>
-        <th>Rôle</th>
+        <th>Nom du rôle</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      {% for u in users %}
+      {% for r in roles %}
       <tr>
-        <td>{{ u.id }}</td>
-        <td>{{ u.username }}</td>
-        <td>{{ u.role.name }}</td>
+        <td>{{ r.id }}</td>
+        <td>{{ r.name }}</td>
         <td>
-          <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-warning">Éditer</a>
           <form method="post"
-                action="{{ url_for('admin.delete_user', user_id=u.id) }}"
-                style="display:inline;"
-                onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                action="{{ url_for('admin.delete_role', role_id=r.id) }}"
+                style="display:inline"
+                onsubmit="return confirm('Supprimer ce rôle ?');">
             <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
           </form>
         </td>
