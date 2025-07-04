@@ -6,3 +6,9 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
+venv/
+__pycache__/
+*/__pycache__/
+/static/*_202505231915
+/templates/partials/*_202505231915
+/templates/sim_status.html_202505231915
