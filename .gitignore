@@ -1,9 +1,16 @@
-# backups/date-stamp
-*_14072025*.py
-app_*.py
-curl.txt
+# Environnement virtuel
+venv/
 
-# dossiers/tests temporaires
-templates/reports/
-static/ussd.js
-routes/ussd.py
+# Caches Python
+__pycache__/
+*.py[cod]
+
+# Fichiers de sauvegarde / versions datées
+*~ 
+*_14072025*.py
+*_14072025*.js
+*_202505231915*
+
+# MacOS / Linux swap
+.DS_Store
+*.swp
