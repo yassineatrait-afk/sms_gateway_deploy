@@ -14,3 +14,6 @@ __pycache__/
 # MacOS / Linux swap
 .DS_Store
 *.swp
+venv/
+__pycache__/
+*.pyc

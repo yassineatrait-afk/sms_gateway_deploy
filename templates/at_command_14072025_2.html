@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Envoyer une commande AT{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h3 class="mb-4">Envoyer une commande AT</h3>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="mb-3">
+        {% for msg in messages %}
+          <div class="alert alert-info">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form id="at-form" method="post" action="{{ url_for('at_bp.at_command') }}">
+    <div class="row mb-3">
+
+      <!-- Port SIM selector -->
+      <div class="col-md-6">
+        <label for="port-dropdown" class="form-label">Port SIM</label>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle w-100"
+                  type="button"
+                  id="portDropdownButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            Choisissez un port
+          </button>
+          <ul class="dropdown-menu w-100"
+              id="port-dropdown"
+              aria-labelledby="portDropdownButton">
+            <!-- Rempli dynamiquement par JS -->
+          </ul>
+          <input type="hidden" name="port" id="selected-port" required>
+        </div>
+      </div>
+
+      <!-- Commande AT selector -->
+      <div class="col-md-6">
+        <label for="at-command" class="form-label">Commande AT</label>
+        <div class="input-group">
+          <select id="command-select" class="form-select">
+            <option value="AT">Testez la communication</option>
+            <option value="AT+CSQ">Affichez la qualité du signal</option>
+            <option value="AT+CREG?">Vérifiez l’enregistrement réseau</option>
+            <option value="AT+COPS?">Interrogez l’opérateur actuel</option>
+            <option value="AT+CPIN?">Vérifiez l’état du PIN SIM</option>
+            <option value="AT+CNUM">Obtenez le numéro de l’abonné</option>
+            <option value="AT+CPAS">Contrôlez l’activité du module</option>
+            <option value="AT+CGSN">Récupérez l’IMEI</option>
+            <option value="AT+CSCA?">Affichez le centre de service SMS</option>
+            <option value="AT+CPMS?">Vérifiez la mémoire SMS</option>
+          </select>
+          <input type="text"
+                 id="at-command"
+                 name="command"
+                 class="form-control"
+                 placeholder="Tapez ou choisissez une commande"
+                 required>
+        </div>
+      </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-warning">Envoyer</button>
+  </form>
+
+  <h4 class="mt-5">Historique des commandes AT</h4>
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Port</th>
+        <th>Commande</th>
+        <th>Créé</th>
+        <th>Status</th>
+        <th>Exécuté</th>
+        <th>Résultat</th>
+      </tr>
+    </thead>
+    <tbody id="at-queue-body">
+      <!-- Injecté par /static/at_command.js -->
+    </tbody>
+  </table>
+</div>
+
+<script src="/static/at_command.js"></script>
+{% endblock %}

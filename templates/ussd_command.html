@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Envoyer une requête USSD{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h3 class="mb-4">Envoyer une requête USSD</h3>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="mb-3">
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ 'danger' if category=='danger' else 'info' }}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label class="form-label">Port SIM</label>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle w-100"
+                type="button" id="portDropdownButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+          -- Choisissez un port --
+        </button>
+        <ul class="dropdown-menu w-100" id="port-dropdown"></ul>
+        <input type="hidden" name="port" id="selected-port" required>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <label for="code-select" class="form-label">Code USSD</label>
+      <select id="code-select" name="code" class="form-select" required>
+        <option value="">-- Choisissez un code --</option>
+        <option value="*111#">Vérifier solde IAM (*111#)</option>
+        <option value="*100#">Vérifier solde Orange (*100#)</option>
+        <option value="*141#">Vérifier solde Inwi (*141#)</option>
+        <option value="*555*PIN#">Recharger crédit IAM (*555*PIN#)</option>
+        <option value="*100*PIN#">Recharger crédit Orange/Inwi (*100*PIN#)</option>
+        <option value="*112*NUM*MONTANT#">Transférer crédit (*112*NUM*MONTANT#)</option>
+        <option value="*121#">Consulter forfait IAM (*121#)</option>
+        <option value="*123#">Consulter forfait Orange (*123#)</option>
+        <option value="*160#">Consulter forfait Inwi (*160#)</option>
+      </select>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Envoyer</button>
+    </div>
+  </form>
+
+  <h4>Historique des sessions USSD</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th><th>Port</th><th>Code</th><th>Status</th>
+        <th>Réponse</th><th>Créé</th><th>Terminé</th>
+      </tr>
+    </thead>
+    <tbody id="ussd-session-body">
+      <!-- Populated by static/ussd.js -->
+    </tbody>
+  </table>
+</div>
+
+<script src="/static/ussd.js"></script>
+{% endblock %}
+

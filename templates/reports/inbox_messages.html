@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Boîte de Réception{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <h2>📥 Boîte de Réception</h2>
+
+  <!-- ─── Filter Form ───────────────────────────────────────── -->
+  <form method="get" class="row g-3 mb-4 align-items-end">
+    <!-- Port SIM dropdown -->
+    <div class="col-md-3">
+      <label class="form-label">Port SIM</label>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle w-100"
+                type="button"
+                id="portDropdownButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+          -- Choisissez un port --
+        </button>
+        <ul class="dropdown-menu w-100" id="port-dropdown">
+          <!-- Injecté dynamiquement par static/inbox.js -->
+        </ul>
+        <input type="hidden" name="port" id="selected-port" value="{{ filters.port or '' }}">
+      </div>
+    </div>
+
+    <!-- Expéditeur -->
+    <div class="col-md-3">
+      <label class="form-label">Expéditeur</label>
+      <input type="text" name="sender" class="form-control"
+             value="{{ filters.sender or '' }}" placeholder="+2126…">
+    </div>
+
+    <!-- Date min -->
+    <div class="col-md-2">
+      <label class="form-label">Date min</label>
+      <input type="date" name="date_min" class="form-control"
+             value="{{ filters.date_min or '' }}">
+    </div>
+
+    <!-- Date max -->
+    <div class="col-md-2">
+      <label class="form-label">Date max</label>
+      <input type="date" name="date_max" class="form-control"
+             value="{{ filters.date_max or '' }}">
+    </div>
+
+    <!-- Buttons -->
+    <div class="col-md-2 d-flex gap-2">
+      <button type="submit" class="btn btn-primary flex-fill">Rechercher</button>
+      <a href="{{ url_for('inbox.inbox') }}" class="btn btn-secondary flex-fill">Réinitialiser</a>
+    </div>
+  </form>
+
+  <!-- Total + Export -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div>Nombre total : {{ pagination.total }}</div>
+    <a href="{{ url_for('inbox.inbox') }}?{{ filters|urlencode }}&export=csv"
+       class="btn btn-outline-primary btn-sm">
+      Exporter CSV
+    </a>
+  </div>
+
+  <!-- ─── Messages Table ─────────────────────────────────────── -->
+  <table class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Port SIM</th>
+        <th>Expéditeur</th>
+        <th>Message</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sms in inbox %}
+      <tr>
+        <td>{{ loop.index + ((pagination.page - 1) * pagination.per_page) }}</td>
+        <td>{{ sms.port }}</td>
+        <td>{{ sms.sender }}</td>
+        <td>{{ sms.content }}</td>
+        <td>{{ sms.received_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- ─── Pagination Controls ─────────────────────────────────── -->
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('inbox.inbox') }}?page=1&{{ filters|urlencode }}">&laquo;&laquo;</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('inbox.inbox') }}?page={{ pagination.prev_num }}&{{ filters|urlencode }}">&lsaquo;</a>
+      </li>
+      {% endif %}
+
+      <li class="page-item active">
+        <span class="page-link">{{ pagination.page }} / {{ pagination.pages }}</span>
+      </li>
+
+      {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('inbox.inbox') }}?page={{ pagination.next_num }}&{{ filters|urlencode }}">&rsaquo;</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('inbox.inbox') }}?page={{ pagination.pages }}&{{ filters|urlencode }}">&raquo;&raquo;</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+<!-- Load the SIM‐ports dropdown script -->
+<script src="/static/inbox.js"></script>
+{% endblock %}

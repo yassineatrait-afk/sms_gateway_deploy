@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Liste des messages{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h2>Liste des messages</h2>
+
+  <form class="row g-3 mb-4" method="get" action="{{ url_for('reports.messages_report') }}">
+    <div class="col-md-3">
+      <label>Numéro GSM :</label>
+      <input name="numero" value="{{ filters.get('numero','') }}"
+             class="form-control" placeholder="2126…">
+    </div>
+    <div class="col-md-2">
+      <label>Statut :</label>
+      <select name="statut" class="form-select">
+        <option value="">Tous</option>
+        {% for s in ['PENDING','SENT','FAILED'] %}
+        <option value="{{ s }}" {% if filters.get('statut')==s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label>Période :</label>
+      <div class="d-flex">
+        <input type="date" name="date_min" value="{{ filters.get('date_min','') }}"
+               class="form-control me-2">
+        <input type="date" name="date_max" value="{{ filters.get('date_max','') }}"
+               class="form-control">
+      </div>
+    </div>
+    <div class="col-md-3 align-self-end">
+      <button type="submit" class="btn btn-primary">Rechercher</button>
+      <a href="{{ url_for('reports.messages_report') }}" class="btn btn-secondary ms-2">Réinitialiser</a>
+    </div>
+  </form>
+
+  <p>Nombre total : {{ pagination.total }}</p>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>GSM</th>
+        <th>Date d'envoi</th>
+        <th>Message</th>
+        <th>Statut</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in messages %}
+      <tr>
+        <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
+        <td>{{ m.phone_number }}</td>
+        <td>{{ m.send_time.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ m.message }}</td>
+        <td>
+          <span class="badge
+            {% if m.status=='SENT' %}bg-success
+            {% elif m.status=='PENDING' %}bg-warning
+            {% else %}bg-danger{% endif %}">
+            {{ m.status }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {# Pagination links #}
+  {% macro page_link(page, label) -%}
+    <li class="page-item {% if page==pagination.page %}active{% endif %}">
+      <a class="page-link"
+         href="{{ url_for('reports.messages_report',
+                          page=page,
+                          numero=filters.get('numero'),
+                          statut=filters.get('statut'),
+                          date_min=filters.get('date_min'),
+                          date_max=filters.get('date_max')) }}">
+        {{ label }}
+      </a>
+    </li>
+  {%- endmacro %}
+  <nav>
+    <ul class="pagination">
+      {% if pagination.has_prev %}
+        {{ page_link(1, '«') }}
+        {{ page_link(pagination.prev_num, '‹') }}
+      {% endif %}
+  
+      {{ page_link(pagination.page, pagination.page ~ ' / ' ~ pagination.pages) }}
+  
+      {% if pagination.has_next %}
+        {{ page_link(pagination.next_num, '›') }}
+        {{ page_link(pagination.pages, '»') }}
+      {% endif %}
+    </ul>
+  </nav>
+
+  {# CSV Export button — passes all filters + export=csv #}
+  <a href="{{ url_for('reports.messages_report',
+                      export='csv',
+                      numero=filters.get('numero'),
+                      statut=filters.get('statut'),
+                      date_min=filters.get('date_min'),
+                      date_max=filters.get('date_max')) }}"
+     class="btn btn-outline-primary">
+    Exporter CSV
+  </a>
+</div>
+{% endblock %}

@@ -1,0 +1,1 @@
+curl.exe --% -X POST http://192.168.88.132:5000/sms/api/send_single -H "Content-Type: application/json" -H "X-API-KEY: 2ae0e297498a331a7078d85f3bff038f1a2fc14a8a9cee3e11b3bf8edb67421d" -d "{\"phone_number\":\"+212666513495\",\"message\":\"ALERT: disk full\",\"port\":5}"
