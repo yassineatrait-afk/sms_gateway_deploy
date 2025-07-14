@@ -14,20 +14,21 @@ from routes.sms import sms_bp
 from routes.sms_campaign import sms_campaign_bp
 from routes.at import at_bp
 from routes.sim_status import sim_bp
+from routes.ussd import ussd_bp             # ← USSD added
 from routes.inbox import inbox_bp
 from routes.tasks import tasks_bp
 
-# Dashboard API blueprint
+# Dashboard & Reports APIs
 from routes.dashboard import dashboard_bp
+from routes.reports import reports_bp
 
 app = Flask(__name__)
-app.secret_key = 'super_secure_74!sms'  # À sécuriser en prod
+app.secret_key = 'super_secure_74!sms'
 app.config.from_object(Config)
 
 # Initialize DB
 db.init_app(app)
 
-# Load current user into `g.current_user`
 @app.before_request
 def load_current_user():
     g.current_user = None
@@ -35,23 +36,23 @@ def load_current_user():
     if user_id:
         g.current_user = User.query.get(user_id)
 
-# Make `current_user` available in all templates
 @app.context_processor
 def inject_current_user():
     return dict(current_user=g.current_user)
 
 # Register blueprints
 app.register_blueprint(auth_bp)
-app.register_blueprint(admin_bp)               # ← Admin routes
+app.register_blueprint(admin_bp)
 app.register_blueprint(sms_bp)
 app.register_blueprint(sms_campaign_bp)
 app.register_blueprint(at_bp)
 app.register_blueprint(sim_bp)
+app.register_blueprint(ussd_bp)            # ← USSD
 app.register_blueprint(inbox_bp)
 app.register_blueprint(tasks_bp)
-app.register_blueprint(dashboard_bp)            # ← Dashboard APIs
+app.register_blueprint(dashboard_bp)
+app.register_blueprint(reports_bp)
 
-# Homepage / dashboard view
 @app.route('/')
 @login_required
 def home():

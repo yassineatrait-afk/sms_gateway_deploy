@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Envoi SMS{% endblock %}
+
 {% block content %}
 <h2>Envoyer un SMS</h2>
 
 {% if success %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   {{ success }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 {% endif %}
-
 {% if error %}
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
   {{ error }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 {% endif %}
 
@@ -22,23 +22,38 @@
     <label for="number" class="form-label">Numéro</label>
     <input type="text" class="form-control" name="number" id="number" required>
   </div>
+
   <div class="mb-3">
     <label for="message" class="form-label">Message</label>
     <textarea class="form-control" name="message" id="message" required></textarea>
   </div>
+
   <div class="mb-3">
-    <label for="port" class="form-label">Port</label>
-    <input type="number" class="form-control" name="port" id="port" required>
+    <label class="form-label">Port SIM</label>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle w-100"
+              type="button"
+              id="portDropdownButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        -- Choisissez un port --
+      </button>
+      <ul class="dropdown-menu w-100" id="port-dropdown">
+        <!-- Injecté dynamiquement -->
+      </ul>
+      <input type="hidden" name="port" id="selected-port" required>
+    </div>
   </div>
+
   <button type="submit" class="btn btn-primary">
-    <span class="spinner-border spinner-border-sm d-none" id="loadingSpinner" role="status" aria-hidden="true"></span>
+    <span class="spinner-border spinner-border-sm d-none"
+          id="loadingSpinner"
+          role="status"
+          aria-hidden="true"></span>
     Envoyer
   </button>
 </form>
 
-<script>
-  document.querySelector("form").addEventListener("submit", function() {
-    document.getElementById("loadingSpinner").classList.remove("d-none");
-  });
-</script>
+<script src="/static/sms_send_single.js"></script>
 {% endblock %}
+

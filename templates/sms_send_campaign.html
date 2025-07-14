@@ -5,84 +5,136 @@
 <div class="container">
   <h3 class="mb-4">Effectuer une campagne</h3>
 
-  <!-- Import Section -->
-  <form method="post" enctype="multipart/form-data" action="/sms/import_campaign" id="import-form" class="mb-5">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ category }} mt-3">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {# ----- STEP 1: Import CSV ----- #}
+  <form method="post"
+        enctype="multipart/form-data"
+        action="{{ url_for('sms_campaign.import_campaign') }}"
+        id="import-form"
+        class="mb-5">
     <div class="row mb-3">
       <div class="col-md-6">
         <label for="unit" class="form-label">Unité :</label>
-        <input type="text" class="form-control" id="unit" name="unit" placeholder="Unité">
+        <input type="text" class="form-control" id="unit" name="unit"
+               placeholder="Unité" value="{{ unit or '' }}">
       </div>
       <div class="col-md-6">
         <label for="campaign_name" class="form-label">Nom de campagne :</label>
-        <input type="text" class="form-control" id="campaign_name" name="campaign_name" placeholder="Nom de la campagne">
+        <input type="text" class="form-control" id="campaign_name" name="campaign_name"
+               placeholder="Nom de la campagne" value="{{ campaign_name or '' }}">
       </div>
     </div>
     <div class="mb-3">
-      <input class="form-control" type="file" name="file" id="file">
+      <input class="form-control" type="file" name="file" id="file" accept=".csv">
     </div>
-    <div class="d-flex gap-3 mb-3">
-      <button type="submit" class="btn btn-primary">Importer</button>
-      <span>Exemple : <a href="/static/exemple.txt" target="_blank">ici</a></span>
-      <span>Perso : <a href="/static/personnalise.txt" target="_blank">ici</a></span>
-    </div>
+    <button type="submit" class="btn btn-primary">Importer</button>
   </form>
 
   {% if imported %}
-  <!-- Campaign Form -->
-  <form method="post" action="/sms/validate_campaign" id="campaign-form">
+  {# ----- STEP 2: Validate & Schedule ----- #}
+  <div class="alert alert-secondary">
+    <strong>Fichier :</strong> {{ filename }}<br>
+    <strong>Lignes :</strong> {{ rows }}
+  </div>
+
+  <form method="post"
+        action="{{ url_for('sms_campaign.validate_campaign') }}"
+        id="campaign-form">
+    {# hidden data from import #}
+    <input type="hidden" name="filename"      value="{{ filename }}">
+    <input type="hidden" name="unit"          value="{{ unit }}">
+    <input type="hidden" name="campaign_name" value="{{ campaign_name }}">
+
     <div class="row mb-3">
-      <div class="col-md-4">
-        <label for="lang" class="form-label">Langue</label>
-        <select class="form-select" id="lang" name="lang">
-          <option value="Latin">Latin</option>
-          <option value="UCS2">UCS2</option>
+      <div class="col-md-6">
+        <label for="port" class="form-label">Port SIM</label>
+        <select class="form-select" id="port" name="port" required>
+          <option value="">-- Choisissez un port --</option>
+          {% for s in sim_ports %}
+            <option value="{{ s.port_number }}">Port {{ s.port_number }} — {{ s.sim_number }}</option>
+          {% endfor %}
         </select>
       </div>
-      <div class="col-md-8">
-        <label for="label" class="form-label">Label</label>
-        <input type="text" class="form-control" id="label" name="label">
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label for="message" class="form-label">Message</label>
-      <textarea class="form-control" id="message" name="message" rows="4"></textarea>
-      <small id="charCount" class="form-text text-muted">0 caractère(s) / 0 message(s)</small>
-      <div class="progress mb-2">
-        <div id="msgProgress" class="progress-bar" role="progressbar" style="width:0%"></div>
-      </div>
-    </div>
-
-    <div class="row mb-4">
       <div class="col-md-6">
-        <label for="test_number" class="form-label">Test unitaire</label>
-        <div class="input-group">
-          <input type="text" class="form-control" id="test_number" name="test_number" placeholder="Numéro GSM">
-          <button class="btn btn-outline-secondary" type="submit" name="action" value="test">Envoyer le test</button>
-        </div>
+        <label for="message" class="form-label">Message</label>
+        <textarea class="form-control" id="message" name="message"
+                  rows="3" required>{{ message or '' }}</textarea>
       </div>
+    </div>
+
+    <div class="row mb-3">
       <div class="col-md-6">
         <label class="form-label">Planification</label><br>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="schedule_type" id="sched_immediate" value="immediate" checked>
+          <input class="form-check-input"
+                 type="radio"
+                 name="schedule_type"
+                 id="sched_immediate"
+                 value="immediate"
+                 checked>
           <label class="form-check-label" for="sched_immediate">Immédiate</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="schedule_type" id="sched_programmed" value="scheduled">
+          <input class="form-check-input"
+                 type="radio"
+                 name="schedule_type"
+                 id="sched_programmed"
+                 value="scheduled">
           <label class="form-check-label" for="sched_programmed">Programmé</label>
         </div>
-        <div class="form-check form-check-inline schedule-field d-none">
-          <input type="datetime-local" name="scheduled_at" class="form-control" id="scheduled_at">
+        <div class="mt-2 d-none schedule-field">
+          <input type="datetime-local"
+                 class="form-control"
+                 name="scheduled_at">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="test_number" class="form-label">Envoi de test</label>
+        <div class="input-group mb-2">
+          <input type="text"
+                 class="form-control"
+                 id="test_number"
+                 name="test_number"
+                 placeholder="Numéro GSM">
+          <button class="btn btn-outline-secondary"
+                  type="submit"
+                  name="action"
+                  value="test">
+            Envoyer test
+          </button>
         </div>
       </div>
     </div>
 
     <div class="d-flex gap-3">
-      <button type="submit" class="btn btn-success" name="action" value="validate">Valider</button>
-      <a href="/" class="btn btn-secondary">Annuler</a>
+      <button class="btn btn-success" type="submit" name="action" value="validate">
+        Valider campagne
+      </button>
+      <a href="{{ url_for('sms_campaign.send_campaign') }}" class="btn btn-secondary">
+        Annuler
+      </a>
     </div>
   </form>
   {% endif %}
 </div>
+
 <script src="/static/sms_campaign.js"></script>
+<script>
+  // Toggle schedule datetime picker
+  document.querySelectorAll('input[name="schedule_type"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelector('.schedule-field')
+              .classList.toggle('d-none', radio.value !== 'scheduled');
+    });
+  });
+</script>
 {% endblock %}
+

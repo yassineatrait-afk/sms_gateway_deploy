@@ -64,6 +64,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="{{ url_for('ussd.ussd_command') }}" class="nav-link text-white">
+            <i class="bi bi-phone"></i> USSD
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="{{ url_for('admin.list_users') }}" class="nav-link text-white">
             <i class="bi bi-people"></i> Utilisateurs
           </a>
@@ -84,6 +89,13 @@
         <li class="nav-item">
           <a href="{{ url_for('sim.sim_status') }}" class="nav-link text-white">
             <i class="bi bi-sim"></i> SIM Status
+          </a>
+        </li>
+
+        <!-- Rapports -->
+        <li class="nav-item">
+          <a href="{{ url_for('reports.messages_report') }}" class="nav-link text-white">
+            <i class="bi bi-bar-chart"></i> Rapports
           </a>
         </li>
 
@@ -137,6 +149,11 @@
         </a>
       </li>
       <li class="nav-item">
+        <a href="{{ url_for('ussd.ussd_command') }}" class="nav-link text-white">
+          <i class="bi bi-phone"></i> USSD
+        </a>
+      </li>
+      <li class="nav-item">
         <a href="{{ url_for('admin.list_users') }}" class="nav-link text-white">
           <i class="bi bi-people"></i> Utilisateurs
         </a>
@@ -157,6 +174,13 @@
       <li class="nav-item">
         <a href="{{ url_for('sim.sim_status') }}" class="nav-link text-white">
           <i class="bi bi-sim"></i> SIM Status
+        </a>
+      </li>
+
+      <!-- Rapports -->
+      <li class="nav-item">
+        <a href="{{ url_for('reports.messages_report') }}" class="nav-link text-white">
+          <i class="bi bi-bar-chart"></i> Rapports
         </a>
       </li>
 

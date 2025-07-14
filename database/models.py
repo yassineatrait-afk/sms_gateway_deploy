@@ -78,7 +78,6 @@ class Log(db.Model):
     message = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 # ─────────────────────────────────────────────────────────────────────────────
 # New models for User & Role management:
 
@@ -94,6 +93,44 @@ class User(db.Model):
     username      = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     role_id       = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_admin(self):
+        return self.role and self.role.name.lower() == 'admin'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# USSD sessions
+
+class USSDSession(db.Model):
+    __tablename__   = 'ussd_session'
+    id              = db.Column(db.Integer, primary_key=True)
+    port_number     = db.Column(db.Integer, nullable=False)
+    code            = db.Column(db.String(32), nullable=False)
+    response        = db.Column(db.Text)
+    status          = db.Column(db.Enum('PENDING','DONE','FAILED'), default='PENDING')
+    created_at      = db.Column(db.DateTime, default=datetime.utcnow)
+    completed_at    = db.Column(db.DateTime)
+
+
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+class User(db.Model):
+    __tablename__  = 'user'
+    __table_args__ = {'extend_existing': True}  # allow re-definition
+
+    id            = db.Column(db.Integer, primary_key=True)
+    username      = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+    role_id       = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+
+    # ← NEW: per-user API toggle & key
+    api_enabled   = db.Column(db.Boolean, default=False)
+    api_key       = db.Column(db.String(64), unique=True)
 
     @property
     def is_authenticated(self):
