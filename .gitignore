@@ -1,19 +1,33 @@
-# Environnement virtuel
-venv/
-
-# Caches Python
-__pycache__/
-*.py[cod]
-
-# Fichiers de sauvegarde / versions datées
-*~ 
-*_14072025*.py
-*_14072025*.js
-*_202505231915*
-
-# MacOS / Linux swap
-.DS_Store
-*.swp
-venv/
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+
+# Virtual environments
+venv/
+env/
+
+# Logs & runtime
+*.log
+*.sock
+*.pid
+.python_history
+
+# Backups
+*.tar
+*.tar.gz
+
+# Local test/dev scripts
+*_old
+*_after_update.py
+*_bef_*.py
+*_07092025*
+*_14072025*
+test_*.py
+sim_debug.py
+get-pip.py
+
+# IDE / editor
+.vscode/
+.idea/
+
