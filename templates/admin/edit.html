@@ -52,35 +52,48 @@
       </select>
     </div>
 
-  <!-- ─── API access toggle ─────────────────────────── -->
-  <div class="mb-3 form-check">
-    <input type="checkbox"
-           class="form-check-input"
-           id="api_enabled"
-           name="api_enabled"
-           {% if user.api_enabled %}checked{% endif %}>
-    <label class="form-check-label" for="api_enabled">Activer l’accès API</label>
-  </div>
-
-  {% if user.api_key %}
-  <!-- show and optionally regenerate -->
-  <div class="mb-3">
-    <label class="form-label">Clé API</label>
-    <div class="input-group">
-      <input type="text"
-             readonly
-             class="form-control"
-             value="{{ user.api_key }}">
-      <button class="btn btn-outline-secondary"
-              type="submit"
-              name="regen_api"
-              value="1">
-        Régénérer
-      </button>
+    <!-- ─── API access toggle ─────────────────────────── -->
+    <div class="mb-3 form-check">
+      <input type="checkbox"
+             class="form-check-input"
+             id="api_enabled"
+             name="api_enabled"
+             {% if user.api_enabled %}checked{% endif %}>
+      <label class="form-check-label" for="api_enabled">Activer l’accès API</label>
     </div>
-  </div>
-  {% endif %}
 
+    {% if user.api_key %}
+    <!-- show and optionally regenerate -->
+    <div class="mb-3">
+      <label class="form-label">Clé API</label>
+      <div class="input-group">
+        <input type="text"
+               readonly
+               class="form-control"
+               value="{{ user.api_key }}">
+        <button class="btn btn-outline-secondary"
+                type="submit"
+                name="regen_api"
+                value="1">
+          Régénérer
+        </button>
+      </div>
+    </div>
+
+<!-- ─── Example CURL command ─────────────────────────── -->
+<div class="mb-3">
+  <label class="form-label">Exemple de test (Windows PowerShell)</label>
+  <textarea class="form-control" rows="3" readonly>
+curl.exe --ssl-no-revoke --% -X POST "https://sms-gateway.ma/sms/api/send_single" -H "Content-Type: application/json" -H "X-API-KEY: {{ user.api_key }}" -d "{\"phone_number\":\"+212666513495\",\"message\":\"ALERT: disk full\",\"port\":1}"
+  </textarea>
+  <small class="form-text text-muted">
+    Copiez/collez cette commande dans PowerShell pour tester la clé API.
+  </small>
+</div>
+
+
+
+    {% endif %}
 
     <button type="submit" class="btn btn-primary">Enregistrer</button>
     <a href="{{ url_for('admin.list_users') }}" class="btn btn-secondary">Annuler</a>

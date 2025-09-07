@@ -55,8 +55,11 @@ def messages_report():
 
     # --- Pagination ---
     page       = request.args.get('page', 1, type=int)
+    #pagination = q.order_by(Message.send_time.desc()) \
+    #              .paginate(page, 20, error_out=False)
+
     pagination = q.order_by(Message.send_time.desc()) \
-                  .paginate(page, 20, error_out=False)
+                  .paginate(page=page, per_page=20, error_out=False)
 
     return render_template(
         'reports/messages.html',

@@ -20,7 +20,7 @@
     <a href="{{ url_for('admin.create_user') }}" class="btn btn-primary">Créer un utilisateur</a>
     <a href="{{ url_for('admin.list_roles') }}"  class="btn btn-secondary">Gérer les rôles</a>
   </div>
-
+ <div class="table-responsive">
   <table class="table table-striped">
     <thead class="table-light">
       <tr>
@@ -49,6 +49,7 @@
       {% endfor %}
     </tbody>
   </table>
+ </div>
 </div>
 {% endblock %}
 

@@ -9,7 +9,7 @@
 </div>
 
 <!-- jQuery + debug + auto-refresh -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='vendor/jquery/jquery-3.6.0.min.js') }}"></script>
 <script>
   setInterval(() => {
     console.log("🔄 Mise à jour des cartes SIM...");

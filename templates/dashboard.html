@@ -69,7 +69,7 @@
 </div>
 
 <!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='vendor/chartjs/chart.umd.min.js') }}"></script>
 <!-- Dashboard data & chart-setup -->
 <script src="/static/dashboard.js"></script>
 {% endblock %}

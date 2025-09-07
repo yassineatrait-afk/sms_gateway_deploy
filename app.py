@@ -1,6 +1,11 @@
 from flask import Flask, redirect, url_for, render_template, session, g
 from config import Config
 from database.models import db, User
+import os
+import logging
+from logging.handlers import RotatingFileHandler
+
+
 
 # Auth
 from routes.auth import auth_bp
@@ -25,6 +30,26 @@ from routes.reports import reports_bp
 app = Flask(__name__)
 app.secret_key = 'super_secure_74!sms'
 app.config.from_object(Config)
+
+
+
+# Setup logging
+if not app.debug:
+    log_dir = '/var/log/sms_gateway'
+    os.makedirs(log_dir, exist_ok=True)
+    
+    file_handler = RotatingFileHandler(os.path.join(log_dir, 'app.log'), maxBytes=1_000_000, backupCount=5)
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('App started')
+
+
+
 
 # Initialize DB
 db.init_app(app)
@@ -59,5 +84,5 @@ def home():
     return render_template('dashboard.html')
 
 if __name__ == '__main__':
-    app.run(host='192.168.88.132', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 

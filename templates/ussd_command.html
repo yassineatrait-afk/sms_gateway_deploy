@@ -35,15 +35,15 @@
       <label for="code-select" class="form-label">Code USSD</label>
       <select id="code-select" name="code" class="form-select" required>
         <option value="">-- Choisissez un code --</option>
-        <option value="*111#">Vérifier solde IAM (*111#)</option>
-        <option value="*100#">Vérifier solde Orange (*100#)</option>
-        <option value="*141#">Vérifier solde Inwi (*141#)</option>
-        <option value="*555*PIN#">Recharger crédit IAM (*555*PIN#)</option>
+        <option value="*#580#">Vérifier solde IAM (*#580#)</option>
+        <option value="#554#">Vérifier solde Orange (#554#)</option>
+        <option value="*120*30#">Vérifier solde Inwi (*120*30#)</option>
+        <!-- <option value="*555*PIN#">Recharger crédit IAM (*555*PIN#)</option>
         <option value="*100*PIN#">Recharger crédit Orange/Inwi (*100*PIN#)</option>
         <option value="*112*NUM*MONTANT#">Transférer crédit (*112*NUM*MONTANT#)</option>
         <option value="*121#">Consulter forfait IAM (*121#)</option>
         <option value="*123#">Consulter forfait Orange (*123#)</option>
-        <option value="*160#">Consulter forfait Inwi (*160#)</option>
+        <option value="*160#">Consulter forfait Inwi (*160#)</option> -->
       </select>
     </div>
 
@@ -53,6 +53,7 @@
   </form>
 
   <h4>Historique des sessions USSD</h4>
+  <div class="table-responsive">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -64,8 +65,10 @@
       <!-- Populated by static/ussd.js -->
     </tbody>
   </table>
+ </div>
 </div>
 
 <script src="/static/ussd.js"></script>
 {% endblock %}
+
 

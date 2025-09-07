@@ -1,4 +1,6 @@
 # scripts/test_sim_updates.py
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 """
 Simulate periodic signal quality updates for all SimPort entries

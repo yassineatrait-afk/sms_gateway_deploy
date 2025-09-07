@@ -1,4 +1,6 @@
 # scripts/seed_settings.py
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import sys, os
 # Ensure project root is on Python path

@@ -27,6 +27,9 @@ main {
 }
 
 /* Desktop sidebar layout */
+
+
+
 @media (min-width: 992px) {
   /* Hide mobile nav components */
   .navbar.d-lg-none,
